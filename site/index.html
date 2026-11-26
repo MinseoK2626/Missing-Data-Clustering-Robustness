@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A reproducible simulation of retail clustering under missing-data mechanisms.">
+  <title>Beyond Data Volume | Retail Clustering Research</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <nav aria-label="Site navigation">
+      <a href="#findings">Findings</a>
+      <a href="#figures">Figures</a>
+      <a href="https://github.com/MinseoK2626/Missing-Data-Clustering-Robustness">GitHub</a>
+    </nav>
+    <h1>Beyond Data Volume</h1>
+    <p>Evaluating clustering robustness under missing-data mechanisms</p>
+    <a class="button" href="https://github.com/MinseoK2626/Missing-Data-Clustering-Robustness/blob/main/reports/research_report.md">Read the research report</a>
+  </header>
+  <main>
+    <section id="findings">
+      <h2>What the simulations found</h2>
+      <p>Across eight seeds, the study ran 480 comparisons of MCAR, MAR and MNAR masking and four imputation methods on synthetic convenience stores. Complete-data K-means served as the reference partition.</p>
+      <div class="findings">
+        <article><h3>Imputation changes the partition</h3><p>At 30% MCAR, mean adjusted Rand index (ARI) was 0.632 with zero fill and 0.861 with iterative imputation.</p></article>
+        <article><h3>Silhouette can miss assignment changes</h3><p>In one 40% MAR run with KNN imputation, silhouette rose from 0.160 to 0.167 while 13.5% of aligned store assignments changed.</p></article>
+        <article><h3>More stores leave some distortion</h3><p>Under 30% MNAR with zero fill, mean held-out ARI rose from 0.568 to 0.718 as training size increased from 500 to 18,000 stores.</p></article>
+      </div>
+    </section>
+    <section id="figures">
+      <h2>Explore the results</h2>
+      <figure>
+        <img src="results/figures/05_silhouette_vs_ari.png" alt="Scatterplots of silhouette and benchmark ARI for MCAR, MAR and MNAR. Some runs exceed the complete-data silhouette while showing lower agreement." width="3540" height="1200">
+        <figcaption>Silhouette versus complete-data ARI. Larger points mark higher masking targets. The dashed line marks the mean complete-data silhouette. <a href="results/figures/05_silhouette_vs_ari.svg">SVG</a> · <a href="results/tables/factorial.csv">Run-level CSV</a></figcaption>
+      </figure>
+      <figure>
+        <img src="results/figures/07_sample_size.png" alt="Distortion versus training size for MCAR, MAR and MNAR. Imputed curves retain distortion relative to the largest clean benchmark." width="3540" height="1200" loading="lazy">
+        <figcaption>Held-out clustering distortion across five training sizes. Error bars show one seed-to-seed standard deviation. <a href="results/figures/07_sample_size.svg">SVG</a> · <a href="results/tables/sample_size_summary.csv">Summary CSV</a></figcaption>
+      </figure>
+      <p class="note">The results apply to the simulated retail population and masking mechanisms. The complete-data partition is a comparison benchmark, and business decision thresholds are illustrative.</p>
+    </section>
+  </main>
+  <footer><a href="https://github.com/MinseoK2626/Missing-Data-Clustering-Robustness#reproduce">Reproduce the study</a></footer>
+</body>
+</html>
