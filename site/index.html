@@ -3,44 +3,172 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="A reproducible simulation of retail clustering under missing-data mechanisms.">
-  <title>Beyond Data Volume | Retail Clustering Research</title>
+  <meta name="description" content="An independent computational study of clustering, missing data, and the limits of sample size.">
+  <meta name="theme-color" content="#faf9fc">
+  <link rel="icon" href="data:,">
+  <title>Beyond Data Volume — Independent Computational Research</title>
   <link rel="stylesheet" href="style.css">
+  <script type="module" src="study.js"></script>
 </head>
 <body>
-  <header>
-    <nav aria-label="Site navigation">
-      <a href="#findings">Findings</a>
-      <a href="#figures">Figures</a>
-      <a href="https://github.com/MinseoK2626/Missing-Data-Clustering-Robustness">GitHub</a>
-    </nav>
-    <h1>Beyond Data Volume</h1>
-    <p>Evaluating clustering robustness under missing-data mechanisms</p>
-    <a class="button" href="https://github.com/MinseoK2626/Missing-Data-Clustering-Robustness/blob/main/reports/research_report.md">Read the research report</a>
-  </header>
-  <main>
-    <section id="findings">
-      <h2>What the simulations found</h2>
-      <p>Across eight seeds, the study ran 480 comparisons of MCAR, MAR and MNAR masking and four imputation methods on synthetic convenience stores. Complete-data K-means served as the reference partition.</p>
-      <div class="findings">
-        <article><h3>Imputation changes the partition</h3><p>At 30% MCAR, mean adjusted Rand index (ARI) was 0.632 with zero fill and 0.861 with iterative imputation.</p></article>
-        <article><h3>Silhouette can miss assignment changes</h3><p>In one 40% MAR run with KNN imputation, silhouette rose from 0.160 to 0.167 while 13.5% of aligned store assignments changed.</p></article>
-        <article><h3>More stores leave some distortion</h3><p>Under 30% MNAR with zero fill, mean held-out ARI rose from 0.568 to 0.718 as training size increased from 500 to 18,000 stores.</p></article>
+  <a class="skip" href="#main">Skip to research</a>
+  <header class="top"><div class="shell top-inner">
+    <a class="wordmark" href="#overview">Beyond Data Volume</a>
+    <div class="top-links"><a href="#lab">Experiment lab</a><a href="https://github.com/MinseoK2626/Missing-Data-Clustering-Robustness">GitHub</a></div>
+    <details class="mobile-nav"><summary>Contents</summary><nav aria-label="Mobile contents" data-navigation></nav></details>
+  </div></header>
+  <main id="main">
+    <section class="hero shell" id="overview" aria-labelledby="title">
+      <p class="eyebrow">Independent computational research / 2026</p>
+      <div class="hero-grid">
+        <div>
+          <h1 id="title">Beyond<br>Data Volume</h1>
+          <p class="subtitle">Investigating clustering robustness under systematic missingness</p>
+          <p class="intro">A computational investigation into how missing-data mechanisms, preprocessing assumptions, and model uncertainty influence the reliability of unsupervised learning.</p>
+          <p class="byline"><strong>Minseo Kim</strong><br>University of Virginia · Commerce &amp; Computer Science</p>
+          <div class="links"><a class="primary" href="#questions">Explore the research <span aria-hidden="true">↓</span></a><a class="secondary" href="#lab">Interactive experiment lab</a></div>
+          <div class="plain-links"><a data-report href="https://github.com/MinseoK2626/Missing-Data-Clustering-Robustness/blob/main/reports/expanded_report.md">Read research report</a><a href="https://github.com/MinseoK2626/Missing-Data-Clustering-Robustness">View source code</a></div>
+        </div>
+        <figure class="hero-figure">
+          <p class="eyebrow">Cluster assignments before and after masking</p>
+          <img src="results/figures/08_pca_clusters.svg" alt="Two principal component plots show the same synthetic stores on complete data and after MNAR masking with zero imputation." width="626" height="302">
+          <figcaption><strong>Figure 1.</strong> Seed 11 from the original study. Both views use the same complete-data PCA axes. Colors represent Hungarian-aligned K-means clusters. The projection omits eight feature dimensions.</figcaption>
+          <p class="subject">Computational statistics · Unsupervised learning · Uncertainty quantification</p>
+        </figure>
       </div>
+      <dl class="study-counts" id="study-counts" aria-label="Verified experimental scope"></dl>
+      <p class="status" id="study-status" role="status">Loading validated study outputs…</p>
     </section>
-    <section id="figures">
-      <h2>Explore the results</h2>
-      <figure>
-        <img src="results/figures/05_silhouette_vs_ari.png" alt="Scatterplots of silhouette and benchmark ARI for MCAR, MAR and MNAR. Some runs exceed the complete-data silhouette while showing lower agreement." width="3540" height="1200">
-        <figcaption>Silhouette versus complete-data ARI. Larger points mark higher masking targets. The dashed line marks the mean complete-data silhouette. <a href="results/figures/05_silhouette_vs_ari.svg">SVG</a> · <a href="results/tables/factorial.csv">Run-level CSV</a></figcaption>
-      </figure>
-      <figure>
-        <img src="results/figures/07_sample_size.png" alt="Distortion versus training size for MCAR, MAR and MNAR. Imputed curves retain distortion relative to the largest clean benchmark." width="3540" height="1200" loading="lazy">
-        <figcaption>Held-out clustering distortion across five training sizes. Error bars show one seed-to-seed standard deviation. <a href="results/figures/07_sample_size.svg">SVG</a> · <a href="results/tables/sample_size_summary.csv">Summary CSV</a></figcaption>
-      </figure>
-      <p class="note">The results apply to the simulated retail population and masking mechanisms. The complete-data partition is a comparison benchmark, and business decision thresholds are illustrative.</p>
-    </section>
+    <div class="shell publication">
+      <aside class="contents"><p class="eyebrow">On this page</p><nav aria-label="Research contents" data-navigation></nav></aside>
+      <div class="paper">
+        <section id="abstract">
+          <p class="section-label">Research abstract</p>
+          <h2>When the data get larger, what stays distorted?</h2>
+          <p class="lede">Missing sales records and genuine zero sales have different meanings. In a segmentation pipeline, the rule used to fill those records can change the structure the algorithm discovers.</p>
+          <p id="abstract-results"></p>
+          <p>All stores and sales are synthetic. The study estimates behavior under the specified simulation, and its business implications are illustrative.</p>
+        </section>
+        <section id="questions">
+          <p class="section-label">Research questions</p>
+          <h2>Five questions about robustness</h2>
+          <ol class="questions">
+            <li><a href="#finding-1">Missingness and preprocessing sensitivity</a><p>How do mechanism, severity and imputation jointly affect benchmark agreement?</p></li>
+            <li><a href="#finding-2">Validation metric reliability</a><p>Can a stronger silhouette conceal substantial changes to individual assignments?</p></li>
+            <li><a href="#finding-3">Data volume and systematic distortion</a><p>How does adding training stores change agreement when missingness persists?</p></li>
+            <li><a href="#finding-4">Experimental variability</a><p>Do average rankings hold across new synthetic cohorts and masking draws?</p></li>
+            <li><a href="#uncertainty">Confidence and assignment stability</a><p>Does a concentrated model posterior coincide with a stable K-means assignment?</p></li>
+          </ol>
+        </section>
+        <section id="methodology">
+          <p class="section-label">Methodology</p>
+          <h2>From complete sales to cluster validation</h2>
+          <ol class="pipeline" aria-label="Research pipeline"><li>Synthetic stores</li><li>Complete reference</li><li>Mask product cells</li><li>Impute</li><li>Fit K-means</li><li>Evaluate</li><li>Aggregate by seed</li></ol>
+          <p>Four overlapping profiles generate traffic, basket value, daypart proportions and correlated product sales. Traffic times basket value gives total sales. A category-specific hurdle produces structural zeros that can be observed or masked. Profile labels are held outside the feature matrix.</p>
+          <dl class="method-list">
+            <dt>MCAR</dt><dd>Each eligible cell is independently masked with constant probability <var>r</var>. Its observed and underlying values have no role.</dd>
+            <dt>MAR</dt><dd>The mask depends on fully observed standardized log traffic and evening share. The logit is <code>b − z(log(1 + traffic)) + 0.55 z(evening) + product offset</code>.</dd>
+            <dt>MNAR</dt><dd>The logit is <code>b − 1.25 z(log(1 + product sales))</code>, standardized within product. This depends on the value that the mask can hide. For MAR and MNAR, <var>b</var> sets the expected product-cell masking rate.</dd>
+          </dl>
+          <p>Zero fill treats missing sales as absent sales. Median fill uses the observed marginal center. KNN uses five distance-weighted neighbors in observed-data standardized features. Iterative fill uses chained Bayesian ridge models (up to 15 iterations). Multivariate estimates return to original sales units and are clipped at zero; original observed cells remain intact. These methods depend on their modeling assumptions under MNAR.</p>
+          <p>Each dataset is standardized feature by feature before fitting K-means with four clusters and 12 initializations. The algorithm minimizes the within-cluster sum of squared Euclidean distances.</p>
+          <math display="block" aria-label="Minimize the sum over clusters and observations of squared distance to the assigned cluster center"><munder><mo>min</mo><mrow><mi mathvariant="bold">μ</mi><mo>,</mo><mi mathvariant="bold">c</mi></mrow></munder><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msubsup><mrow><mo>‖</mo><msub><mi mathvariant="bold">z</mi><mi>i</mi></msub><mo>−</mo><msub><mi mathvariant="bold">μ</mi><msub><mi>c</mi><mi>i</mi></msub></msub><mo>‖</mo></mrow><mn>2</mn><mn>2</mn></msubsup></math>
+          <p>The complete-data model uses the same recipe and defines the comparison partition. Its labels need not match the overlapping latent profiles. In the original first-seed check over two to eight clusters, the elbow rule chose four and silhouette chose two across the complete and examined masked conditions.</p>
+          <details><summary>How to read the evaluation metrics</summary>
+            <p><strong>ARI</strong> compares partitions with correction for chance. One corresponds to identical partitions up to label permutation. Values near zero indicate agreement near the chance reference. <strong>Silhouette</strong> compares average within-cluster distance with the nearest other cluster's average distance. It uses a fixed seeded subset of up to 1,000 stores per cohort. <strong>Assignment change rate</strong> is the fraction that changes clusters after optimal Hungarian alignment.</p>
+            <p><strong>GMM confidence</strong> is the highest estimated posterior across mixture components on a single iterative-imputed frame. <strong>K-means stability</strong> is the most frequent aligned cluster share across 48 masking and imputation scenarios in the original uncertainty cohort. These measures use different models and answer different questions.</p>
+          </details>
+          <div class="figure-section">
+            <h3>Follow a missing value through the pipeline</h3>
+            <p>This demonstration refits the documented models on 120 synthetic stores and shows eight rows. It is separate from the factorial experiment.</p>
+            <div id="demo" aria-busy="true"></div>
+            <p class="caption"><strong>Figure 2.</strong> Highlighting tracks original masked cells. A printed zero in the complete matrix is a structural zero. Only product sales can be masked.</p>
+          </div>
+        </section>
+        <section id="lab">
+          <p class="section-label">Interactive experiment lab</p>
+          <h2>Compare preprocessing on matched cohorts</h2>
+          <p>Explore precomputed runs. Choose several methods to see their outcome distributions on the same synthetic cohorts and masks. Intervals resample seeds and describe Monte Carlo precision under this generator.</p>
+          <div id="lab-controls" class="controls"></div>
+          <div id="lab-result" aria-live="polite"></div>
+          <p class="caption"><strong>Figure 3.</strong> Boxes show the middle 50% of seed outcomes. Whiskers show the 5th and 95th percentiles. Purple intervals show 95% bootstrap confidence intervals for the mean.</p>
+          <details id="design"><summary>Inspect every factorial configuration</summary><p id="design-equation"></p><div id="design-table"></div></details>
+        </section>
+        <section id="results">
+          <p class="section-label">Research results</p>
+          <h2>Evidence across the experiments</h2>
+          <article id="finding-1">
+            <h3><span>01</span> Imputation can change the segmentation</h3>
+            <p>Within each seed, all methods see the same 5,000-store dataset and the same mask at a given mechanism and target. The heatmap compares outcomes to the complete-data reference.</p>
+            <div class="controls" id="heat-controls"></div><div id="heatmap"></div>
+            <p class="caption"><strong>Figure 4.</strong> Means across usable seeds. Each cell links to its confidence interval, spread and seed-level values in the lab.</p>
+            <p id="finding-one"></p>
+            <p>Downstream decisions should examine changes in partition membership as well as reconstruction error. These ranks are conditional on the selected imputation implementations and sales generator.</p>
+          </article>
+          <article id="finding-2">
+            <h3><span>02</span> Stronger separation can coexist with assignment changes</h3>
+            <p>For each run we subtract the silhouette of its seed-matched complete-data partition and measure the share of assignments changed after alignment.</p>
+            <div class="controls" id="scatter-controls"></div><div id="validation-scatter"></div>
+            <p class="caption"><strong>Figure 5.</strong> The vertical guide marks zero silhouette gain. Purple points mark improved silhouette with at least 10% of stores reassigned, a descriptive threshold.</p>
+            <p id="finding-two"></p>
+            <p>Silhouette describes geometry after preprocessing and does not test membership consistency. The thresholds are descriptive and paired configurations share seeds.</p>
+          </article>
+          <article id="finding-3">
+            <h3><span>03</span> Larger training cohorts can leave residual disagreement</h3>
+            <p>In the separate original sample-size study, clean and imputed models were trained on nested samples and evaluated on the same independent 2,500-store holdout within each seed. The clean reference used the largest training cohort and complete evaluation features.</p>
+            <div class="controls" id="sample-controls"></div><div id="sample-chart"></div>
+            <p id="finding-three"></p>
+            <p class="caption"><strong>Figure 6.</strong> Seed outcomes, mean lines and 95% seed-bootstrap mean intervals. The finite experiment combines training and evaluation missingness and gives no asymptotic estimate.</p>
+          </article>
+          <article id="finding-4">
+            <h3><span>04</span> Mean ranks conceal variation across seeds</h3>
+            <p>Within each design cell the paired ARI difference measures the effect in ARI units after matching on seed and mask. Rank shares count how often each method has the highest ARI, splitting credit for ties.</p>
+            <div class="controls" id="pair-controls"></div><div id="paired"></div>
+            <p class="caption"><strong>Figure 7.</strong> Paired means with 95% seed-bootstrap intervals. The lower tail and winner share use empirical outcomes.</p>
+            <p>Ranking stability helps decide whether a pipeline needs contingency checks. Intervals are marginal descriptions of the simulated design; no multiplicity-adjusted significance claims are made.</p>
+          </article>
+        </section>
+        <section id="uncertainty">
+          <p class="section-label">Observation-level uncertainty</p>
+          <h2><span class="number">05</span> Confidence and stability can disagree</h2>
+          <p>The original 5,000-store cohort provides a one-cohort diagnostic. A GMM fits the 30% MNAR iterative frame. Repeated K-means fits under 48 alternative scenarios track aligned membership frequencies.</p>
+          <div id="uncertainty-content" aria-busy="true"></div>
+          <p class="caption"><strong>Figure 8.</strong> Purple identifies stores with maximum posterior ≥ 0.80 and stability &lt; 0.60. The thresholds illustrate a review policy, and the GMM posteriors have not been calibrated against assignment correctness.</p>
+        </section>
+        <section id="discussion">
+          <p class="section-label">Discussion</p>
+          <h2>How to use these diagnostics</h2>
+          <p>In a retail workflow, audit cases where a strong internal score coexists with changed membership. Check whether incomplete records reflect category absence or a reporting problem before using cluster assignments for promotions or assortment planning. A manager might prioritize review where labels move under plausible changes or where the posterior and stability signals disagree.</p>
+          <h3>Limitations and future research</h3>
+          <p>The synthetic generator, simplified masking functions, scaling, Euclidean geometry and K-means reference limit external validity. The study does not estimate business outcomes. MNAR assumptions cannot generally be identified from observed data alone. An extreme or alternative synthetic generator, public transaction data, stochastic multiple imputation, Bayesian mixtures and decision-oriented validation would test how far the results extend.</p>
+          <p>Seed-to-seed variability concerns repeated simulation. Systematic distortion concerns disagreement relative to a reference. Posterior confidence is conditional on a fitted model, scenario stability depends on selected assumptions, and uncertainty about the data-generating process lies outside the reported seed intervals.</p>
+        </section>
+        <section id="reproducibility">
+          <p class="section-label">Reproducibility</p>
+          <h2>Rebuild the research</h2>
+          <pre><code>python -m pip install -r requirements.txt
+python -m pytest -q
+python run_expanded.py --jobs 4
+python -m scripts.analyze_expanded
+python -m scripts.build_site</code></pre>
+          <p>Runs checkpoint by seed with fixed configurations. The first eight seeds are shared with the original design, whose output is preserved. The original sample-size and uncertainty cohorts retain their own analysis scope.</p>
+          <p class="plain-links"><a data-download hidden href="research-report.pdf">Download PDF report</a><a data-results href="results/expanded/factorial.csv">Factorial CSV</a><a href="results/tables/sample_size.csv">Sample size CSV</a><a href="results/tables/store_stability.csv">Store uncertainty CSV</a></p>
+        </section>
+        <section id="references">
+          <p class="section-label">References</p>
+          <h2>Literature and foundations</h2>
+          <p>Rubin formalizes missing-data assumptions, and Little and Rubin connect them to likelihood and imputation. Rousseeuw motivates the internal silhouette diagnostic. Von Luxburg surveys the rationale and caveats of clustering stability. Meng's account of data quality and quantity motivates our finite-sample comparison without providing a theoretical result for K-means.</p>
+          <ol class="references">
+            <li>Rubin, D. B. (1976). Inference and missing data. <i>Biometrika</i>, 63(3), 581–592. <a href="https://doi.org/10.1093/biomet/63.3.581">DOI</a></li>
+            <li>Little, R. J. A., &amp; Rubin, D. B. (2019). <i>Statistical Analysis with Missing Data</i> (3rd ed.). Wiley. <a href="https://doi.org/10.1002/9781119482260">DOI</a></li>
+            <li>Rousseeuw, P. J. (1987). Silhouettes: A graphical aid to the interpretation and validation of cluster analysis. <i>Journal of Computational and Applied Mathematics</i>, 20, 53–65. <a href="https://doi.org/10.1016/0377-0427(87)90125-7">DOI</a></li>
+            <li>von Luxburg, U. (2010). Clustering stability: An overview. <i>Foundations and Trends in Machine Learning</i>, 2(3), 235–274. <a href="https://doi.org/10.1561/2200000008">DOI</a></li>
+            <li>Meng, X.-L. (2018). Statistical paradises and paradoxes in big data (I): Law of large populations, big data paradox, and the 2016 US presidential election. <i>Annals of Applied Statistics</i>, 12(2), 685–726. <a href="https://doi.org/10.1214/18-AOAS1161SF">DOI</a></li>
+          </ol>
+        </section>
+      </div>
+    </div>
   </main>
-  <footer><a href="https://github.com/MinseoK2626/Missing-Data-Clustering-Robustness#reproduce">Reproduce the study</a></footer>
+  <footer><div class="shell"><strong>Beyond Data Volume</strong><p>Independent computational research by Minseo Kim.</p><a href="#overview">Back to overview</a></div></footer>
 </body>
 </html>

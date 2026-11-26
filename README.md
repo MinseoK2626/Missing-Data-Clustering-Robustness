@@ -6,6 +6,56 @@ A synthetic study of convenience-store segmentation. It examines when
 missing sales and the assumptions used to fill them can alter store
 assignments even as a clustering model reports stronger internal separation.
 
+## Expanded study and interactive publication
+
+[Live research site](https://minseok2626.github.io/Missing-Data-Clustering-Robustness/) · [Expanded report](reports/expanded_report.md) · [PDF](reports/expanded_report.pdf) · [Expanded results](results/expanded) · [Data dictionary](data/expanded.md)
+
+The expanded primary factorial completed **4,800 usable fits across 80
+synthetic cohorts and 60 configurations**. The design retains the first
+eight original seeds and adds seeds 1001–1072. The public site exposes
+seed-level data, distribution summaries, matched comparisons, masking
+demonstrations and representative store profiles. Original results and
+figures remain in `results/tables/` and `results/figures/`. The sample-size
+experiment and observation-level uncertainty analysis rely on those
+original cohorts. The findings below document that original study.
+
+From the repository root, after installing the pinned dependencies:
+
+```bash
+python -m pytest -q
+python run_expanded.py --jobs 4
+python -m scripts.analyze_expanded
+python -m scripts.write_report
+pandoc reports/expanded_report.md --pdf-engine=xelatex -o reports/expanded_report.pdf
+python -m scripts.build_site
+python -m http.server 8000 --directory _site
+```
+
+`run_expanded.py` writes an atomic checkpoint per completed seed under
+`.checkpoints/expanded/`. Rerun the same command to continue. Use a fresh
+checkpoint directory with any change of design, source implementation or
+numerical environment. Each process has one numerical thread. Worker errors
+leave their seeds available for retry. Use `--collect-only --output /path/to/review` to assemble completed checkpoints without starting pending seeds. Failed configurations within complete
+seed checkpoints remain in the diagnostic ledger. The report and interactive
+figures regenerate from the same seed-level source. Use
+`python run_experiments.py --config configs/default.yaml` to regenerate original
+PNG and SVG figures, and `python -m scripts.build_site --original --output _site_original`
+to build against the original factorial.
+
+| Path | Contents |
+| --- | --- |
+| `src/` | Simulation, preprocessing, model evaluation and statistical estimation |
+| `configs/` | Original, quick and expanded designs |
+| `results/` | Original outputs and expanded run ledger, summaries and contrasts |
+| `scripts/` | Statistical analysis, report generation and static site assembly |
+| `site/` | Browser interface for the precomputed experiments |
+| `reports/` and `notebooks/` | Research write-ups and original walkthroughs |
+
+Browser smoke tests use the Node Playwright package and Chromium. With the
+assembled site served locally, use `node scripts/check_site.cjs`.
+Set `BDV_SITE_URL` to exercise a repository subpath and
+`BDV_SCREENSHOTS` to capture screenshots.
+
 ## Motivation and research questions
 
 An internship project used K-means to segment stores from transaction records.
@@ -27,7 +77,7 @@ customer shares. Some stores genuinely do not carry a product and have recorded
 zeros. Only product sales are exposed to probabilistic masking. Latent
 profiles are stored separately and used for evaluation.
 
-The full factorial experiment uses eight seeds, 5,000 stores per seed,
+The original factorial experiment uses eight seeds, 5,000 stores per seed,
 five target product-cell masking rates from 5% to 40%, three mechanisms and
 four imputation methods. Four-cluster K-means is compared with seed-matched
 complete-data K-means. An additional held-out study varies training size from

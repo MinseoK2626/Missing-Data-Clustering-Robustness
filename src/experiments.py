@@ -1,7 +1,10 @@
 """Run paired simulations and collect tidy, machine-readable outputs."""
+import warnings
+
 import numpy as np
 import pandas as pd
 from sklearn.decomposition import PCA
+from sklearn.exceptions import ConvergenceWarning
 from sklearn.metrics import adjusted_rand_score
 
 from .clustering import fit_kmeans
@@ -42,9 +45,9 @@ def cluster_selection(frame, keys, limit, seed):
     return rows
 
 
-def run_factorial(config):
+def run_factorial(config, *, primary_only=False):
     rows, missingness, bias, selection, benchmarks = [], [], [], [], []
-    representative = {}
+    representative, diagnostics = {}, []
     for seed in config["seeds"]:
         complete, profiles = generate(config["stores"], seed)
         common, benchmark = fit_kmeans(complete, seed)
@@ -52,7 +55,7 @@ def run_factorial(config):
         full_scores = internal(common.transform(complete), reference, config["silhouette_limit"], seed)
         benchmarks.append(dict(seed=seed, latent_ari=adjusted_rand_score(profiles, reference),
                                wcss=benchmark.inertia_, **full_scores))
-        first = seed == config["seeds"][0]
+        first = not primary_only and seed == config["seeds"][0]
         if first:
             selection.extend(cluster_selection(complete, {"mechanism": "complete", "method": "none",
                                                           "target_rate": 0},
@@ -68,11 +71,28 @@ def run_factorial(config):
                                                 masked=int(np.sum(cells)), eligible_or_all_cells=np.size(cells),
                                                 rate=np.mean(cells)))
                 for method in config["methods"]:
-                    imputed, _ = impute(observed, method, seed)
-                    scaler, model = fit_kmeans(imputed, seed)
-                    metrics, aligned = evaluate(imputed, scaler, model, reference, profiles, common,
-                                                benchmark.cluster_centers_, config["silhouette_limit"], seed)
-                    errors, feature_bias = reconstruction(complete, imputed, mask)
+                    with warnings.catch_warnings(record=True) as captured:
+                        warnings.simplefilter("always")
+                        try:
+                            imputed, _ = impute(observed, method, seed)
+                            scaler, model = fit_kmeans(imputed, seed)
+                            metrics, aligned = evaluate(imputed, scaler, model, reference, profiles, common,
+                                                        benchmark.cluster_centers_, config["silhouette_limit"], seed)
+                            errors, feature_bias = reconstruction(complete, imputed, mask)
+                        except Exception as error:
+                            if not primary_only:
+                                raise
+                            diagnostics.append(dict(keys, method=method, status="failed",
+                                                    message=f"{type(error).__name__}: {error}"))
+                            continue
+                    if primary_only:
+                        status = ("convergence_warning" if any(issubclass(item.category, ConvergenceWarning)
+                                                               for item in captured) else "success")
+                        diagnostics.append(dict(keys, method=method, status=status,
+                                                message=" | ".join(str(item.message) for item in captured)))
+                    else:
+                        for item in captured:
+                            warnings.warn_explicit(item.message, item.category, item.filename, item.lineno)
                     rows.append(dict(keys, method=method,
                                      realized_product_rate=mask[PRODUCTS].to_numpy().mean(),
                                      realized_overall_rate=mask.to_numpy().mean(), **metrics, **errors))
@@ -91,7 +111,8 @@ def run_factorial(config):
         print(f"Factorial seed {seed} complete", flush=True)
     return {"factorial": pd.DataFrame(rows), "missingness": pd.DataFrame(missingness),
             "imputation_bias": pd.DataFrame(bias), "cluster_selection": pd.DataFrame(selection),
-            "benchmarks": pd.DataFrame(benchmarks)}, representative
+            "benchmarks": pd.DataFrame(benchmarks),
+            **({"diagnostics": pd.DataFrame(diagnostics)} if primary_only else {})}, representative
 
 
 def run_sample_sizes(config):

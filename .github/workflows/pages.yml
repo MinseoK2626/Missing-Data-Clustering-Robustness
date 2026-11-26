@@ -23,11 +23,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
-      - name: Assemble the static site
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Install publication dependencies
+        run: pip install -r requirements.txt
+      - name: Assemble and validate the static site
         run: |
-          mkdir -p _site/results
-          cp -R site/. _site/
-          cp -R results/figures results/tables _site/results/
+          python -m pytest -q
+          python -m scripts.build_site
+          node --check site/study.js
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
