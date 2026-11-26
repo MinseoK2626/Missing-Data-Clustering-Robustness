@@ -1,0 +1,54 @@
+{
+  "python": "3.12.14",
+  "config": {
+    "output": "results",
+    "seeds": [
+      11,
+      23,
+      37,
+      51,
+      83,
+      101,
+      131,
+      157
+    ],
+    "stores": 5000,
+    "rates": [
+      0.05,
+      0.1,
+      0.2,
+      0.3,
+      0.4
+    ],
+    "methods": [
+      "zero",
+      "median",
+      "knn",
+      "iterative"
+    ],
+    "mechanisms": [
+      "MCAR",
+      "MAR",
+      "MNAR"
+    ],
+    "sample_sizes": [
+      500,
+      1000,
+      5000,
+      10000,
+      18000
+    ],
+    "evaluation_stores": 2500,
+    "silhouette_limit": 1000,
+    "sample_rate": 0.3,
+    "stability_repeats": 4
+  },
+  "versions": {
+    "numpy": "2.2.6",
+    "pandas": "2.2.3",
+    "scipy": "1.15.3",
+    "scikit-learn": "1.6.1",
+    "matplotlib": "3.10.3",
+    "PyYAML": "6.0.2"
+  }
+}

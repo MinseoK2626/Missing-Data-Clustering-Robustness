@@ -1,0 +1,11 @@
+output: quick-results
+seeds: [11, 23]
+stores: 650
+rates: [0.05, 0.10, 0.20, 0.30, 0.40]
+methods: [zero, median, knn, iterative]
+mechanisms: [MCAR, MAR, MNAR]
+sample_sizes: [500, 1000]
+evaluation_stores: 650
+silhouette_limit: 450
+sample_rate: 0.30
+stability_repeats: 2
